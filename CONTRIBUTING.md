@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for improving `Network-Optimization`. This repository is kept public for reproducible research and engineering reuse, so changes should stay small, documented, and easy to verify.
+Thank you for improving `yingzhou-bjtu`. This repository is kept public for reproducible research and engineering reuse, so changes should stay small, documented, and easy to verify.
 
 ## Scope
 
