@@ -15,30 +15,34 @@
 
 ## About Me
 
-- 💼 **Current**: Joining **Moore Threads** (摩尔线程) as AI Infrastructure Engineer
-- 🔬 **Research**: Distributed networks, data center networks, federated learning, AI infrastructure
-- 🎓 **Education**: Ph.D. @ BJTU (2026) | B.E. @ China University of Petroleum (Beijing) (GPA **1/60**)
-- 📫 **Contact**: 22110019@bjtu.edu.cn
+- **Current**: Joining **Moore Threads** (摩尔线程) as AI Infrastructure Engineer
+- **Research**: Distributed networks, data center networks, federated learning, AI infrastructure
+- **Education**: Ph.D. @ BJTU (2026) | B.E. @ China University of Petroleum (Beijing) (GPA **1/60**)
+- **Contact**: 22110019@bjtu.edu.cn
 
 ## Highlights
 
 | Area | Details |
 |------|---------|
-| 📄 Publications | TCE, ToN (CCF-A), ICASSP (CCF-B), INFOCOM/CCS under review |
-| 🏆 Awards | CUMCM National First Prize (Top 0.3%), Huawei Cup National 2nd/3rd Prize |
-| 💻 Industry | AI Infra @ Qingcheng Zhiji, Algorithm @ China Mobile, Research @ SUAT |
+| Publications | TCE, ToN (CCF-A), ICASSP (CCF-B), INFOCOM/CCS under review |
+| Awards | CUMCM National First Prize (Top 0.3%), Huawei Cup National 2nd/3rd Prize |
+| Industry | AI Infra @ Qingcheng Zhiji, Algorithm @ China Mobile, Research @ SUAT |
 
 ## Links
 
-- 🌐 **[Academic Homepage](https://yingzhou-bjtu.github.io/)** — full CV, publications & projects
-- 📂 **[LoongX](https://github.com/jhlxp/loongx)** — SimAI communication layer extension
-- 📂 **[DockerNetworkSimulation](https://github.com/yingzhou-bjtu/DockerNetworkSimulation)** — OSPF/LISP Mininet project
+- **[Academic Homepage](https://yingzhou-bjtu.github.io/)** — full CV, publications & projects
+- **[LoongX](https://github.com/jhlxp/loongx)** — SimAI communication layer extension
+- **[Containerized Routing Network Simulator](https://github.com/yingzhou-bjtu/containerized-routing-simulator)** — Docker-based OSPF/LISP network simulation
 
 ---
 
 <div align="center">
   <img src="https://komarev.com/ghpvc/?username=yingzhou-bjtu&color=blueviolet&style=flat-square" alt="Profile views" />
 </div>
+
+## Project Identity
+
+See [docs/PROJECT_IDENTITY.md](docs/PROJECT_IDENTITY.md) for the profile repository scope and public project boundary.
 
 ## Repository Notes
 
