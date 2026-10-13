@@ -39,3 +39,9 @@
 <div align="center">
   <img src="https://komarev.com/ghpvc/?username=yingzhou-bjtu&color=blueviolet&style=flat-square" alt="Profile views" />
 </div>
+
+## Repository Notes
+
+This profile repository is intentionally small. Project code, datasets, and
+paper artifacts live in their own repositories; this README only keeps public
+identity, current work, and stable links.
