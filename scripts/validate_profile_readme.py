@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+import argparse
+import json
 import re
 import sys
 from pathlib import Path
@@ -48,8 +50,8 @@ def extract_selected_repositories(readme_text: str) -> list[tuple[str, str, str]
     return rows
 
 
-def main() -> None:
-    readme_text = README.read_text(encoding="utf-8")
+def validate_profile_readme(readme_path: Path = README) -> dict[str, object]:
+    readme_text = readme_path.read_text(encoding="utf-8")
     rows = extract_selected_repositories(readme_text)
     if not rows:
         fail("selected public repositories table has no repository rows")
@@ -78,10 +80,34 @@ def main() -> None:
     if missing_references:
         fail(f"README does not reference required documentation files: {missing_references}")
 
+    return {
+        "selected_repository_count": len(repositories),
+        "selected_repositories": repositories,
+        "document_references": [name for name, _ in REQUIRED_DOCUMENT_REFERENCES],
+    }
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--json-out", type=Path, default=None)
+    return parser
+
+
+def main(argv: list[str] | None = None) -> None:
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    report = validate_profile_readme()
+    if args.json_out is not None:
+        args.json_out.parent.mkdir(parents=True, exist_ok=True)
+        args.json_out.write_text(
+            json.dumps(report, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
+
     print("PROFILE_README_CHECK_PASS")
-    print(f"selected_repository_count={len(repositories)}")
-    print("selected_repositories=" + ",".join(repositories))
-    print("document_references=" + ",".join(name for name, _ in REQUIRED_DOCUMENT_REFERENCES))
+    print(f"selected_repository_count={report['selected_repository_count']}")
+    print("selected_repositories=" + ",".join(report["selected_repositories"]))
+    print("document_references=" + ",".join(report["document_references"]))
 
 
 if __name__ == "__main__":
