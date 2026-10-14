@@ -45,6 +45,30 @@ class ProfileReadmeError(ValueError):
     """Raised when the profile README does not match the repository contract."""
 
 
+def path_is_relative_to(path: Path, parent: Path) -> bool:
+    try:
+        path.relative_to(parent)
+    except ValueError:
+        return False
+    return True
+
+
+def resolve_report_path(path: Path, spec: ProfileReadmeSpec) -> Path:
+    resolved = path.expanduser().resolve()
+    if resolved.suffix.lower() != ".json":
+        raise ValueError(f"json_out must end with .json: {path}")
+    if resolved.exists() and resolved.is_dir():
+        raise ValueError(f"json_out is a directory, not a file: {path}")
+    if resolved == spec.readme_path.expanduser().resolve():
+        raise ValueError("json_out must not overwrite the input README")
+    repo_root = spec.repo_root.expanduser().resolve()
+    if path_is_relative_to(resolved, repo_root):
+        relative = resolved.relative_to(repo_root)
+        if not relative.parts or relative.parts[0] not in {"logs", "reports"}:
+            raise ValueError("json_out inside the repository must be under logs/ or reports/")
+    return resolved
+
+
 def extract_selected_repositories(readme_text: str) -> list[tuple[str, str, str]]:
     marker = "## Selected Public Repositories"
     if marker not in readme_text:
@@ -123,13 +147,21 @@ def main(argv: list[str] | None = None) -> int:
         repo_root=args.repo_root.resolve(),
     )
     try:
+        json_out = (
+            resolve_report_path(args.json_out, spec)
+            if args.json_out is not None
+            else None
+        )
+    except ValueError as exc:
+        parser.error(str(exc))
+    try:
         report = validate_profile_readme(spec)
     except ProfileReadmeError as exc:
         print(f"PROFILE_README_CHECK_FAIL: {exc}", file=sys.stderr)
         return 1
-    if args.json_out is not None:
-        args.json_out.parent.mkdir(parents=True, exist_ok=True)
-        args.json_out.write_text(
+    if json_out is not None:
+        json_out.parent.mkdir(parents=True, exist_ok=True)
+        json_out.write_text(
             json.dumps(report, indent=2, ensure_ascii=False) + "\n",
             encoding="utf-8",
         )

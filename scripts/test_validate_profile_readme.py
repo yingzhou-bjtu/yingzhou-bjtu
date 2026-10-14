@@ -11,6 +11,7 @@ from validate_profile_readme import (
     ProfileReadmeError,
     ProfileReadmeSpec,
     main,
+    resolve_report_path,
     validate_profile_readme,
 )
 
@@ -84,7 +85,7 @@ def test_main_writes_json_report_for_custom_paths() -> None:
     with tempfile.TemporaryDirectory(prefix="profile-readme-cli-test-") as temporary:
         root = Path(temporary)
         readme = write_profile_fixture(root)
-        report = root / "report.json"
+        report = root / "logs" / "report.json"
 
         assert main(
             [
@@ -100,7 +101,65 @@ def test_main_writes_json_report_for_custom_paths() -> None:
         assert '"selected_repository_count": 5' in report.read_text(encoding="utf-8")
 
 
+def test_resolve_report_path_rejects_root_report_file() -> None:
+    with tempfile.TemporaryDirectory(prefix="profile-readme-report-test-") as temporary:
+        root = Path(temporary)
+        readme = write_profile_fixture(root)
+        spec = ProfileReadmeSpec(readme_path=readme, repo_root=root)
+        try:
+            resolve_report_path(root / "report.json", spec)
+        except ValueError as exc:
+            assert "logs/ or reports/" in str(exc)
+        else:
+            raise AssertionError("json_out accepted a repository-root report")
+
+
+def test_resolve_report_path_rejects_non_json_suffix() -> None:
+    with tempfile.TemporaryDirectory(prefix="profile-readme-report-suffix-") as temporary:
+        root = Path(temporary)
+        readme = write_profile_fixture(root)
+        spec = ProfileReadmeSpec(readme_path=readme, repo_root=root)
+        try:
+            resolve_report_path(root / "logs" / "report.txt", spec)
+        except ValueError as exc:
+            assert "must end with .json" in str(exc)
+        else:
+            raise AssertionError("json_out accepted a non-json suffix")
+
+
+def test_resolve_report_path_rejects_readme_overwrite() -> None:
+    with tempfile.TemporaryDirectory(prefix="profile-readme-report-overwrite-") as temporary:
+        root = Path(temporary)
+        readme = root / "README.json"
+        docs = root / "docs"
+        docs.mkdir()
+        (docs / "PROJECT_IDENTITY.md").write_text("# Identity\n", encoding="utf-8")
+        (docs / "OPEN_SOURCE_STANDARD.md").write_text("# Standard\n", encoding="utf-8")
+        readme.write_text("# Profile\n", encoding="utf-8")
+        spec = ProfileReadmeSpec(readme_path=readme, repo_root=root)
+        try:
+            resolve_report_path(readme, spec)
+        except ValueError as exc:
+            assert "must not overwrite" in str(exc)
+        else:
+            raise AssertionError("json_out accepted a README overwrite path")
+
+
+def test_resolve_report_path_accepts_tmp_json() -> None:
+    with tempfile.TemporaryDirectory(prefix="profile-readme-report-tmp-") as temporary:
+        root = Path(temporary) / "profile"
+        root.mkdir()
+        readme = write_profile_fixture(root)
+        spec = ProfileReadmeSpec(readme_path=readme, repo_root=root)
+        report = resolve_report_path(Path(temporary) / "profile_report.json", spec)
+        assert report.name == "profile_report.json"
+
+
 if __name__ == "__main__":
     test_validate_profile_readme_accepts_custom_paths()
     test_validate_profile_readme_reports_wrong_order()
     test_main_writes_json_report_for_custom_paths()
+    test_resolve_report_path_rejects_root_report_file()
+    test_resolve_report_path_rejects_non_json_suffix()
+    test_resolve_report_path_rejects_readme_overwrite()
+    test_resolve_report_path_accepts_tmp_json()

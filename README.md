@@ -79,3 +79,7 @@ python3 scripts/validate_profile_readme.py \
   --repo-root /path/to/profile-repo \
   --json-out /tmp/profile_readme_check.json
 ```
+
+`--json-out` must be a `.json` file. If it is inside the profile repository, it
+must live under `logs/` or `reports/`; otherwise, write it to `/tmp` or another
+external artifact directory.
