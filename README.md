@@ -52,6 +52,7 @@
 ## Project Identity
 
 See [docs/PROJECT_IDENTITY.md](docs/PROJECT_IDENTITY.md) for the profile repository scope and public project boundary.
+See [docs/OPEN_SOURCE_STANDARD.md](docs/OPEN_SOURCE_STANDARD.md) for the repository hygiene and validation contract.
 
 ## Repository Notes
 

@@ -19,6 +19,10 @@ EXPECTED_REPOSITORIES = [
     "multipath-delay-measurements",
     "paper-agent",
 ]
+REQUIRED_DOCUMENT_REFERENCES = [
+    ("docs/PROJECT_IDENTITY.md", REPO_ROOT / "docs" / "PROJECT_IDENTITY.md"),
+    ("docs/OPEN_SOURCE_STANDARD.md", REPO_ROOT / "docs" / "OPEN_SOURCE_STANDARD.md"),
+]
 
 REPOSITORY_LINK_PATTERN = re.compile(
     r"\| \[[^\]]+\]\(https://github\.com/(?P<owner>[^/)]+)/(?P<repo>[^/)]+)\) \| (?P<scope>[^|]+) \|"
@@ -66,9 +70,18 @@ def main() -> None:
     if duplicate_repositories:
         fail(f"duplicate selected repositories: {duplicate_repositories}")
 
+    missing_documents = [name for name, path in REQUIRED_DOCUMENT_REFERENCES if not path.is_file()]
+    if missing_documents:
+        fail(f"missing required documentation files: {missing_documents}")
+
+    missing_references = [name for name, _ in REQUIRED_DOCUMENT_REFERENCES if name not in readme_text]
+    if missing_references:
+        fail(f"README does not reference required documentation files: {missing_references}")
+
     print("PROFILE_README_CHECK_PASS")
     print(f"selected_repository_count={len(repositories)}")
     print("selected_repositories=" + ",".join(repositories))
+    print("document_references=" + ",".join(name for name, _ in REQUIRED_DOCUMENT_REFERENCES))
 
 
 if __name__ == "__main__":
