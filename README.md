@@ -32,7 +32,16 @@
 
 - **[Academic Homepage](https://yingzhou-bjtu.github.io/)** — full CV, publications & projects
 - **[LoongX](https://github.com/jhlxp/loongx)** — SimAI communication layer extension
-- **[Containerized Routing Network Simulator](https://github.com/yingzhou-bjtu/containerized-routing-simulator)** — Docker-based OSPF/LISP network simulation
+
+## Selected Public Repositories
+
+| Repository | Scope |
+| --- | --- |
+| [FlowFish Streaming Clustering](https://github.com/yingzhou-bjtu/flowfish-streaming-clustering) | Streaming speaker clustering artifact with reproducible benchmarks |
+| [PIFCA](https://github.com/yingzhou-bjtu/PIFCA) | Federated clustering method for non-IID client distributions |
+| [Containerized Routing Network Simulator](https://github.com/yingzhou-bjtu/containerized-routing-simulator) | Docker-based OSPF/LISP network simulation |
+| [Multipath Delay Measurements](https://github.com/yingzhou-bjtu/multipath-delay-measurements) | Relative-delay measurement dataset with DNS-derived IP metadata and packet captures |
+| [paper-agent](https://github.com/yingzhou-bjtu/paper-agent) | Local Overleaf writing workspace tools and reproducible paper workflows |
 
 ---
 
