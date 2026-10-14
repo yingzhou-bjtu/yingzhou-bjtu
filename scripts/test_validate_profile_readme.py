@@ -8,6 +8,7 @@ from pathlib import Path
 
 from validate_profile_readme import (
     EXPECTED_REPOSITORIES,
+    EXPECTED_REPOSITORY_LINKS,
     REQUIRED_SUPPORT_FILES,
     ProfileReadmeError,
     ProfileReadmeSpec,
@@ -21,6 +22,7 @@ from validate_profile_readme import (
 def write_profile_fixture(
     root: Path,
     repositories: tuple[str, ...] = tuple(EXPECTED_REPOSITORIES),
+    repository_links: tuple[tuple[str, str], ...] | None = None,
 ) -> Path:
     for name in REQUIRED_SUPPORT_FILES:
         (root / name).write_text(f"{name}\n", encoding="utf-8")
@@ -30,9 +32,12 @@ def write_profile_fixture(
     (docs / "PROJECT_IDENTITY.md").write_text("# Identity\n", encoding="utf-8")
     (docs / "OPEN_SOURCE_STANDARD.md").write_text("# Standard\n", encoding="utf-8")
 
+    if repository_links is None:
+        labels_by_repo = {repo: label for label, repo in EXPECTED_REPOSITORY_LINKS}
+        repository_links = tuple((labels_by_repo[repo], repo) for repo in repositories)
     rows = "\n".join(
-        f"| [{repo}](https://github.com/yingzhou-bjtu/{repo}) | Scope for {repo} |"
-        for repo in repositories
+        f"| [{label}](https://github.com/yingzhou-bjtu/{repo}) | Scope for {repo} |"
+        for label, repo in repository_links
     )
     readme = root / "README.md"
     readme.write_text(
@@ -68,6 +73,9 @@ def test_validate_profile_readme_accepts_custom_paths() -> None:
 
         assert report["selected_repository_count"] == len(EXPECTED_REPOSITORIES)
         assert report["selected_repositories"] == list(EXPECTED_REPOSITORIES)
+        assert report["selected_repository_labels"] == [
+            label for label, _ in EXPECTED_REPOSITORY_LINKS
+        ]
         assert report["support_files"] == list(REQUIRED_SUPPORT_FILES)
 
 
@@ -85,6 +93,23 @@ def test_validate_profile_readme_reports_wrong_order() -> None:
             assert "unexpected selected repository order" in str(exc)
         else:
             raise AssertionError("wrong repository order was accepted")
+
+
+def test_validate_profile_readme_reports_wrong_label() -> None:
+    with tempfile.TemporaryDirectory(prefix="profile-readme-label-test-") as temporary:
+        root = Path(temporary)
+        repository_links = tuple(EXPECTED_REPOSITORY_LINKS)
+        repository_links = (("FlowFish", repository_links[0][1]),) + repository_links[1:]
+        readme = write_profile_fixture(root, repository_links=repository_links)
+
+        try:
+            validate_profile_readme(
+                ProfileReadmeSpec(readme_path=readme, repo_root=root)
+            )
+        except ProfileReadmeError as exc:
+            assert "unexpected selected repository labels" in str(exc)
+        else:
+            raise AssertionError("wrong repository label was accepted")
 
 
 def test_main_writes_json_report_for_custom_paths() -> None:
@@ -195,6 +220,7 @@ def test_write_report_json_replaces_report_without_temp_files() -> None:
 if __name__ == "__main__":
     test_validate_profile_readme_accepts_custom_paths()
     test_validate_profile_readme_reports_wrong_order()
+    test_validate_profile_readme_reports_wrong_label()
     test_main_writes_json_report_for_custom_paths()
     test_validate_profile_readme_reports_missing_support_file()
     test_resolve_report_path_rejects_root_report_file()

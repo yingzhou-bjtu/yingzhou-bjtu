@@ -87,4 +87,6 @@ temporary file and atomically replaced.
 
 The validator also checks that the profile repository keeps its public support
 files: `.editorconfig`, `LICENSE`, `CONTRIBUTING.md`, `SECURITY.md`,
-`CODE_OF_CONDUCT.md`, and `CITATION.cff`.
+`CODE_OF_CONDUCT.md`, and `CITATION.cff`. The selected repository table keeps
+both the expected GitHub repository slugs and the expected display names under
+validation so public links cannot drift silently.

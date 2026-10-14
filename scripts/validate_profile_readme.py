@@ -17,13 +17,15 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 README = REPO_ROOT / "README.md"
 OWNER = "yingzhou-bjtu"
 
-EXPECTED_REPOSITORIES = [
-    "flowfish-streaming-clustering",
-    "PIFCA",
-    "containerized-routing-simulator",
-    "multipath-delay-measurements",
-    "paper-agent",
+EXPECTED_REPOSITORY_LINKS = [
+    ("FlowFish Streaming Clustering", "flowfish-streaming-clustering"),
+    ("PIFCA", "PIFCA"),
+    ("Containerized Routing Network Simulator", "containerized-routing-simulator"),
+    ("Multipath Delay Measurements", "multipath-delay-measurements"),
+    ("paper-agent", "paper-agent"),
 ]
+EXPECTED_REPOSITORY_LABELS = [label for label, _ in EXPECTED_REPOSITORY_LINKS]
+EXPECTED_REPOSITORIES = [repo for _, repo in EXPECTED_REPOSITORY_LINKS]
 REQUIRED_DOCUMENT_REFERENCES = [
     "docs/PROJECT_IDENTITY.md",
     "docs/OPEN_SOURCE_STANDARD.md",
@@ -38,7 +40,7 @@ REQUIRED_SUPPORT_FILES = [
 ]
 
 REPOSITORY_LINK_PATTERN = re.compile(
-    r"\| \[[^\]]+\]\(https://github\.com/(?P<owner>[^/)]+)/(?P<repo>[^/)]+)\) \| (?P<scope>[^|]+) \|"
+    r"\| \[(?P<label>[^\]]+)\]\(https://github\.com/(?P<owner>[^/)]+)/(?P<repo>[^/)]+)\) \| (?P<scope>[^|]+) \|"
 )
 
 
@@ -48,6 +50,7 @@ class ProfileReadmeSpec:
     repo_root: Path
     owner: str = OWNER
     expected_repositories: tuple[str, ...] = tuple(EXPECTED_REPOSITORIES)
+    expected_repository_labels: tuple[str, ...] = tuple(EXPECTED_REPOSITORY_LABELS)
     required_document_references: tuple[str, ...] = tuple(REQUIRED_DOCUMENT_REFERENCES)
     required_support_files: tuple[str, ...] = tuple(REQUIRED_SUPPORT_FILES)
 
@@ -80,7 +83,7 @@ def resolve_report_path(path: Path, spec: ProfileReadmeSpec) -> Path:
     return resolved
 
 
-def extract_selected_repositories(readme_text: str) -> list[tuple[str, str, str]]:
+def extract_selected_repositories(readme_text: str) -> list[tuple[str, str, str, str]]:
     marker = "## Selected Public Repositories"
     if marker not in readme_text:
         raise ProfileReadmeError("missing selected public repositories section")
@@ -90,7 +93,14 @@ def extract_selected_repositories(readme_text: str) -> list[tuple[str, str, str]
     for line in section.splitlines():
         match = REPOSITORY_LINK_PATTERN.fullmatch(line.strip())
         if match:
-            rows.append((match.group("owner"), match.group("repo"), match.group("scope").strip()))
+            rows.append(
+                (
+                    match.group("owner"),
+                    match.group("label").strip(),
+                    match.group("repo"),
+                    match.group("scope").strip(),
+                )
+            )
     return rows
 
 
@@ -103,15 +113,19 @@ def validate_profile_readme(spec: ProfileReadmeSpec | None = None) -> dict[str, 
     if not rows:
         raise ProfileReadmeError("selected public repositories table has no repository rows")
 
-    owners = {owner for owner, _, _ in rows}
+    owners = {owner for owner, _, _, _ in rows}
     if owners != {spec.owner}:
         raise ProfileReadmeError(f"unexpected repository owner set: {sorted(owners)}")
 
-    repositories = [repo for _, repo, _ in rows]
+    repositories = [repo for _, _, repo, _ in rows]
     if repositories != list(spec.expected_repositories):
         raise ProfileReadmeError(f"unexpected selected repository order: {repositories}")
 
-    empty_scopes = [repo for _, repo, scope in rows if not scope]
+    labels = [label for _, label, _, _ in rows]
+    if labels != list(spec.expected_repository_labels):
+        raise ProfileReadmeError(f"unexpected selected repository labels: {labels}")
+
+    empty_scopes = [repo for _, _, repo, scope in rows if not scope]
     if empty_scopes:
         raise ProfileReadmeError(f"repository rows with empty scope: {empty_scopes}")
 
@@ -147,6 +161,7 @@ def validate_profile_readme(spec: ProfileReadmeSpec | None = None) -> dict[str, 
 
     return {
         "selected_repository_count": len(repositories),
+        "selected_repository_labels": labels,
         "selected_repositories": repositories,
         "document_references": list(spec.required_document_references),
         "support_files": list(spec.required_support_files),
@@ -209,6 +224,7 @@ def main(argv: list[str] | None = None) -> int:
 
     print("PROFILE_README_CHECK_PASS")
     print(f"selected_repository_count={report['selected_repository_count']}")
+    print("selected_repository_labels=" + ",".join(report["selected_repository_labels"]))
     print("selected_repositories=" + ",".join(report["selected_repositories"]))
     print("document_references=" + ",".join(report["document_references"]))
     print("support_files=" + ",".join(report["support_files"]))
