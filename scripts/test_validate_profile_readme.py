@@ -14,6 +14,7 @@ from validate_profile_readme import (
     main,
     resolve_report_path,
     validate_profile_readme,
+    write_report_json,
 )
 
 
@@ -178,6 +179,19 @@ def test_resolve_report_path_accepts_tmp_json() -> None:
         assert report.name == "profile_report.json"
 
 
+def test_write_report_json_replaces_report_without_temp_files() -> None:
+    with tempfile.TemporaryDirectory(prefix="profile-readme-write-report-") as temporary:
+        report = Path(temporary) / "logs" / "report.json"
+        report.parent.mkdir()
+        report.write_text('{"old": true}\n', encoding="utf-8")
+
+        write_report_json(report, {"selected_repository_count": 5})
+
+        report_text = report.read_text(encoding="utf-8")
+        assert '"selected_repository_count": 5' in report_text
+        assert not list(report.parent.glob(".report.json.*.tmp"))
+
+
 if __name__ == "__main__":
     test_validate_profile_readme_accepts_custom_paths()
     test_validate_profile_readme_reports_wrong_order()
@@ -187,3 +201,4 @@ if __name__ == "__main__":
     test_resolve_report_path_rejects_non_json_suffix()
     test_resolve_report_path_rejects_readme_overwrite()
     test_resolve_report_path_accepts_tmp_json()
+    test_write_report_json_replaces_report_without_temp_files()

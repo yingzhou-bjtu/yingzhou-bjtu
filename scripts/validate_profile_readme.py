@@ -6,9 +6,11 @@ from __future__ import annotations
 import argparse
 from dataclasses import dataclass
 import json
+import os
 import re
 import sys
 from pathlib import Path
+import tempfile
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -151,6 +153,29 @@ def validate_profile_readme(spec: ProfileReadmeSpec | None = None) -> dict[str, 
     }
 
 
+def write_report_json(path: Path, report: dict[str, object]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = json.dumps(report, indent=2, ensure_ascii=False) + "\n"
+    temp_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            "w",
+            encoding="utf-8",
+            dir=path.parent,
+            prefix=f".{path.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as temp_file:
+            temp_path = Path(temp_file.name)
+            temp_file.write(payload)
+            temp_file.flush()
+            os.fsync(temp_file.fileno())
+        temp_path.replace(path)
+    finally:
+        if temp_path is not None and temp_path.exists():
+            temp_path.unlink()
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--readme", type=Path, default=README)
@@ -180,11 +205,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"PROFILE_README_CHECK_FAIL: {exc}", file=sys.stderr)
         return 1
     if json_out is not None:
-        json_out.parent.mkdir(parents=True, exist_ok=True)
-        json_out.write_text(
-            json.dumps(report, indent=2, ensure_ascii=False) + "\n",
-            encoding="utf-8",
-        )
+        write_report_json(json_out, report)
 
     print("PROFILE_README_CHECK_PASS")
     print(f"selected_repository_count={report['selected_repository_count']}")
