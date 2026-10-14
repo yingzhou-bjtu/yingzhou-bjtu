@@ -15,7 +15,8 @@ Before pushing a change, run the checks that match the files you changed:
 
 ```bash
 git diff --check
-python3 -m compileall .
+python3 scripts/validate_profile_readme.py
+python3 -m py_compile scripts/validate_profile_readme.py
 ```
 
 If a check requires data, containers, or hardware that is not publicly available, document the smallest public smoke test in `README.md`.

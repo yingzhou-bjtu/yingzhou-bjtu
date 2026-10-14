@@ -58,3 +58,12 @@ See [docs/PROJECT_IDENTITY.md](docs/PROJECT_IDENTITY.md) for the profile reposit
 This profile repository is intentionally small. Project code, datasets, and
 paper artifacts live in their own repositories; this README only keeps public
 identity, current work, and stable links.
+
+## Validation
+
+Before updating the profile README, run:
+
+```bash
+python3 scripts/validate_profile_readme.py
+git diff --check
+```
