@@ -218,13 +218,6 @@ def test_write_report_json_replaces_report_without_temp_files() -> None:
 
 
 if __name__ == "__main__":
-    test_validate_profile_readme_accepts_custom_paths()
-    test_validate_profile_readme_reports_wrong_order()
-    test_validate_profile_readme_reports_wrong_label()
-    test_main_writes_json_report_for_custom_paths()
-    test_validate_profile_readme_reports_missing_support_file()
-    test_resolve_report_path_rejects_root_report_file()
-    test_resolve_report_path_rejects_non_json_suffix()
-    test_resolve_report_path_rejects_readme_overwrite()
-    test_resolve_report_path_accepts_tmp_json()
-    test_write_report_json_replaces_report_without_temp_files()
+    for name, test_func in sorted(globals().items()):
+        if name.startswith("test_") and callable(test_func):
+            test_func()
