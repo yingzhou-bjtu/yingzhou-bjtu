@@ -65,6 +65,17 @@ identity, current work, and stable links.
 Before updating the profile README, run:
 
 ```bash
+python3 scripts/test_validate_profile_readme.py
 python3 scripts/validate_profile_readme.py
 git diff --check
+```
+
+To validate a staged or copied profile tree without editing the script, pass
+the target paths explicitly:
+
+```bash
+python3 scripts/validate_profile_readme.py \
+  --readme /path/to/README.md \
+  --repo-root /path/to/profile-repo \
+  --json-out /tmp/profile_readme_check.json
 ```
