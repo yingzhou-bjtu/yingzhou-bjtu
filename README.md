@@ -83,3 +83,7 @@ python3 scripts/validate_profile_readme.py \
 `--json-out` must be a `.json` file. If it is inside the profile repository, it
 must live under `logs/` or `reports/`; otherwise, write it to `/tmp` or another
 external artifact directory.
+
+The validator also checks that the profile repository keeps its public support
+files: `.editorconfig`, `LICENSE`, `CONTRIBUTING.md`, `SECURITY.md`,
+`CODE_OF_CONDUCT.md`, and `CITATION.cff`.

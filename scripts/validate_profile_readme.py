@@ -26,6 +26,14 @@ REQUIRED_DOCUMENT_REFERENCES = [
     "docs/PROJECT_IDENTITY.md",
     "docs/OPEN_SOURCE_STANDARD.md",
 ]
+REQUIRED_SUPPORT_FILES = [
+    ".editorconfig",
+    "CITATION.cff",
+    "CODE_OF_CONDUCT.md",
+    "CONTRIBUTING.md",
+    "LICENSE",
+    "SECURITY.md",
+]
 
 REPOSITORY_LINK_PATTERN = re.compile(
     r"\| \[[^\]]+\]\(https://github\.com/(?P<owner>[^/)]+)/(?P<repo>[^/)]+)\) \| (?P<scope>[^|]+) \|"
@@ -39,6 +47,7 @@ class ProfileReadmeSpec:
     owner: str = OWNER
     expected_repositories: tuple[str, ...] = tuple(EXPECTED_REPOSITORIES)
     required_document_references: tuple[str, ...] = tuple(REQUIRED_DOCUMENT_REFERENCES)
+    required_support_files: tuple[str, ...] = tuple(REQUIRED_SUPPORT_FILES)
 
 
 class ProfileReadmeError(ValueError):
@@ -124,10 +133,21 @@ def validate_profile_readme(spec: ProfileReadmeSpec | None = None) -> dict[str, 
             f"README does not reference required documentation files: {missing_references}"
         )
 
+    missing_support_files = [
+        name
+        for name in spec.required_support_files
+        if not (spec.repo_root / name).is_file()
+    ]
+    if missing_support_files:
+        raise ProfileReadmeError(
+            f"missing required support files: {missing_support_files}"
+        )
+
     return {
         "selected_repository_count": len(repositories),
         "selected_repositories": repositories,
         "document_references": list(spec.required_document_references),
+        "support_files": list(spec.required_support_files),
     }
 
 
@@ -170,6 +190,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"selected_repository_count={report['selected_repository_count']}")
     print("selected_repositories=" + ",".join(report["selected_repositories"]))
     print("document_references=" + ",".join(report["document_references"]))
+    print("support_files=" + ",".join(report["support_files"]))
     return 0
 
 

@@ -8,6 +8,7 @@ from pathlib import Path
 
 from validate_profile_readme import (
     EXPECTED_REPOSITORIES,
+    REQUIRED_SUPPORT_FILES,
     ProfileReadmeError,
     ProfileReadmeSpec,
     main,
@@ -20,6 +21,9 @@ def write_profile_fixture(
     root: Path,
     repositories: tuple[str, ...] = tuple(EXPECTED_REPOSITORIES),
 ) -> Path:
+    for name in REQUIRED_SUPPORT_FILES:
+        (root / name).write_text(f"{name}\n", encoding="utf-8")
+
     docs = root / "docs"
     docs.mkdir()
     (docs / "PROJECT_IDENTITY.md").write_text("# Identity\n", encoding="utf-8")
@@ -63,6 +67,7 @@ def test_validate_profile_readme_accepts_custom_paths() -> None:
 
         assert report["selected_repository_count"] == len(EXPECTED_REPOSITORIES)
         assert report["selected_repositories"] == list(EXPECTED_REPOSITORIES)
+        assert report["support_files"] == list(REQUIRED_SUPPORT_FILES)
 
 
 def test_validate_profile_readme_reports_wrong_order() -> None:
@@ -99,6 +104,24 @@ def test_main_writes_json_report_for_custom_paths() -> None:
         ) == 0
         assert report.is_file()
         assert '"selected_repository_count": 5' in report.read_text(encoding="utf-8")
+        assert '"support_files"' in report.read_text(encoding="utf-8")
+
+
+def test_validate_profile_readme_reports_missing_support_file() -> None:
+    with tempfile.TemporaryDirectory(prefix="profile-readme-support-test-") as temporary:
+        root = Path(temporary)
+        readme = write_profile_fixture(root)
+        (root / "SECURITY.md").unlink()
+
+        try:
+            validate_profile_readme(
+                ProfileReadmeSpec(readme_path=readme, repo_root=root)
+            )
+        except ProfileReadmeError as exc:
+            assert "missing required support files" in str(exc)
+            assert "SECURITY.md" in str(exc)
+        else:
+            raise AssertionError("missing support file was accepted")
 
 
 def test_resolve_report_path_rejects_root_report_file() -> None:
@@ -159,6 +182,7 @@ if __name__ == "__main__":
     test_validate_profile_readme_accepts_custom_paths()
     test_validate_profile_readme_reports_wrong_order()
     test_main_writes_json_report_for_custom_paths()
+    test_validate_profile_readme_reports_missing_support_file()
     test_resolve_report_path_rejects_root_report_file()
     test_resolve_report_path_rejects_non_json_suffix()
     test_resolve_report_path_rejects_readme_overwrite()
