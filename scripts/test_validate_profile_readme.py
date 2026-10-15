@@ -247,6 +247,33 @@ def test_missing_readme_uses_validator_failure_contract() -> None:
         assert "PROFILE_README_CHECK_FAIL" in stderr.getvalue()
 
 
+def test_profile_spec_normalizes_path_strings() -> None:
+    spec = ProfileReadmeSpec(readme_path="README.md", repo_root=".")
+
+    assert spec.readme_path == Path("README.md")
+    assert spec.repo_root == Path(".")
+
+
+def test_profile_spec_rejects_invalid_sequences() -> None:
+    for field_name, value, message in (
+        ("expected_repositories", "repo", "sequence of strings"),
+        ("required_support_files", ("LICENSE", 1), "invalid string entries"),
+        ("required_document_references", ("docs/a", "docs/a"), "duplicates"),
+        ("expected_repository_labels", (), "must not be empty"),
+    ):
+        kwargs = {
+            "readme_path": Path("README.md"),
+            "repo_root": Path("."),
+            field_name: value,
+        }
+        try:
+            ProfileReadmeSpec(**kwargs)
+        except ValueError as exc:
+            assert message in str(exc)
+        else:
+            raise AssertionError(f"invalid {field_name} was accepted")
+
+
 if __name__ == "__main__":
     for name, test_func in sorted(globals().items()):
         if name.startswith("test_") and callable(test_func):

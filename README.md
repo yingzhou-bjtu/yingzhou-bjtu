@@ -86,6 +86,9 @@ external artifact directory. Reports are written through a same-directory
 temporary file and atomically replaced.
 Missing or unreadable README files are reported through the same
 `PROFILE_README_CHECK_FAIL` contract instead of escaping as tracebacks.
+Direct `ProfileReadmeSpec` construction accepts path strings, normalizes them to
+`Path`, and rejects malformed, empty, or duplicate name sequences before any
+filesystem access.
 
 The validator also checks that the profile repository keeps its public support
 files: `.editorconfig`, `LICENSE`, `CONTRIBUTING.md`, `SECURITY.md`,

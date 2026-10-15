@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from collections.abc import Sequence
 from dataclasses import dataclass
 import json
 import os
@@ -53,6 +54,67 @@ class ProfileReadmeSpec:
     expected_repository_labels: tuple[str, ...] = tuple(EXPECTED_REPOSITORY_LABELS)
     required_document_references: tuple[str, ...] = tuple(REQUIRED_DOCUMENT_REFERENCES)
     required_support_files: tuple[str, ...] = tuple(REQUIRED_SUPPORT_FILES)
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "readme_path", normalize_path("readme_path", self.readme_path))
+        object.__setattr__(self, "repo_root", normalize_path("repo_root", self.repo_root))
+        if (
+            not isinstance(self.owner, str)
+            or not self.owner.strip()
+            or "\r" in self.owner
+            or "\n" in self.owner
+        ):
+            raise ValueError("owner must be a non-empty single-line string")
+        object.__setattr__(
+            self,
+            "expected_repositories",
+            normalize_string_sequence("expected_repositories", self.expected_repositories),
+        )
+        object.__setattr__(
+            self,
+            "expected_repository_labels",
+            normalize_string_sequence(
+                "expected_repository_labels",
+                self.expected_repository_labels,
+            ),
+        )
+        object.__setattr__(
+            self,
+            "required_document_references",
+            normalize_string_sequence(
+                "required_document_references",
+                self.required_document_references,
+            ),
+        )
+        object.__setattr__(
+            self,
+            "required_support_files",
+            normalize_string_sequence("required_support_files", self.required_support_files),
+        )
+
+
+def normalize_path(name: str, value: object) -> Path:
+    if isinstance(value, (str, os.PathLike)):
+        return Path(value)
+    raise ValueError(f"{name} must be a filesystem path")
+
+
+def normalize_string_sequence(name: str, value: object) -> tuple[str, ...]:
+    if isinstance(value, (str, bytes)) or not isinstance(value, Sequence):
+        raise ValueError(f"{name} must be a sequence of strings")
+    normalized = tuple(value)
+    if not normalized:
+        raise ValueError(f"{name} must not be empty")
+    invalid = [
+        index
+        for index, item in enumerate(normalized)
+        if not isinstance(item, str) or not item.strip()
+    ]
+    if invalid:
+        raise ValueError(f"{name} contains invalid string entries: {invalid}")
+    if len(set(normalized)) != len(normalized):
+        raise ValueError(f"{name} must not contain duplicates")
+    return normalized
 
 
 class ProfileReadmeError(ValueError):
