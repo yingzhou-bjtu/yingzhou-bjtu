@@ -108,7 +108,12 @@ def validate_profile_readme(spec: ProfileReadmeSpec | None = None) -> dict[str, 
     if spec is None:
         spec = ProfileReadmeSpec(readme_path=README, repo_root=REPO_ROOT)
 
-    readme_text = spec.readme_path.read_text(encoding="utf-8")
+    try:
+        readme_text = spec.readme_path.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise ProfileReadmeError(
+            f"cannot read profile README {spec.readme_path}: {exc}"
+        ) from exc
     rows = extract_selected_repositories(readme_text)
     if not rows:
         raise ProfileReadmeError("selected public repositories table has no repository rows")

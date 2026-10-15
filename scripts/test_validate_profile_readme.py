@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+import contextlib
+import io
 import tempfile
 from pathlib import Path
 
@@ -215,6 +217,34 @@ def test_write_report_json_replaces_report_without_temp_files() -> None:
         report_text = report.read_text(encoding="utf-8")
         assert '"selected_repository_count": 5' in report_text
         assert not list(report.parent.glob(".report.json.*.tmp"))
+
+
+def test_missing_readme_uses_validator_failure_contract() -> None:
+    with tempfile.TemporaryDirectory(prefix="profile-readme-missing-test-") as temporary:
+        root = Path(temporary)
+        missing = root / "README.md"
+
+        try:
+            validate_profile_readme(
+                ProfileReadmeSpec(readme_path=missing, repo_root=root)
+            )
+        except ProfileReadmeError as exc:
+            assert "cannot read profile README" in str(exc)
+        else:
+            raise AssertionError("missing README was accepted")
+
+        stderr = io.StringIO()
+        with contextlib.redirect_stderr(stderr):
+            exit_code = main(
+                [
+                    "--readme",
+                    str(missing),
+                    "--repo-root",
+                    str(root),
+                ]
+            )
+        assert exit_code == 1
+        assert "PROFILE_README_CHECK_FAIL" in stderr.getvalue()
 
 
 if __name__ == "__main__":

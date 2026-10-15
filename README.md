@@ -84,6 +84,8 @@ python3 scripts/validate_profile_readme.py \
 must live under `logs/` or `reports/`; otherwise, write it to `/tmp` or another
 external artifact directory. Reports are written through a same-directory
 temporary file and atomically replaced.
+Missing or unreadable README files are reported through the same
+`PROFILE_README_CHECK_FAIL` contract instead of escaping as tracebacks.
 
 The validator also checks that the profile repository keeps its public support
 files: `.editorconfig`, `LICENSE`, `CONTRIBUTING.md`, `SECURITY.md`,
