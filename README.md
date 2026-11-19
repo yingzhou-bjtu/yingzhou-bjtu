@@ -37,11 +37,12 @@ graph-safe execution, and reproducible performance work.
 | Publications | TCE, ToN (CCF-A), ICASSP (CCF-B), INFOCOM/CCS under review |
 | Awards | CUMCM National First Prize, Huawei Cup National 2nd/3rd Prize |
 | Industry | AI Infra @ Qingcheng Zhiji, Algorithm @ China Mobile, Research @ SUAT |
+| Public record | 15 accepted/published papers · 1 granted patent · 3 IETF Internet-Drafts |
 
 ## Selected Upstream Contributions
 
-Authored pull requests across the production systems I work on. Open proposals and
-merged changes are labeled separately; the links point to the upstream evidence.
+Selected upstream pull requests across the production systems I work on. Open and
+merged changes are labeled separately, with direct links to upstream evidence.
 
 | Project | Contribution | Status | PR |
 |---|---|---|:---:|
