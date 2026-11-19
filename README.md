@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://yingzhou-bjtu.github.io/images/avatar.png" width="148" style="border-radius: 50%;" alt="Ying Zhou">
+<img src="https://yingzhou-bjtu.github.io/images/avatar.webp" width="148" style="border-radius: 50%;" alt="Ying Zhou">
 
 # Ying Zhou (周瀛)
 
