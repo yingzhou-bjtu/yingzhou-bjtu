@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://yingzhou-bjtu.github.io/images/avatar.png" width="180" style="border-radius: 50%;" alt="Ying Zhou">
+<img src="https://yingzhou-bjtu.github.io/images/avatar.png" width="148" style="border-radius: 50%;" alt="Ying Zhou">
 
 # Ying Zhou (周瀛)
 
@@ -16,11 +16,18 @@ graph-safe execution, and reproducible performance work.
 
 </div>
 
-## About Me
+<table>
+<tr>
+<td width="33%" valign="top"><strong>NOW</strong><br>Inference Optimization Engineer<br><sub>Moore Threads · Beijing</sub></td>
+<td width="33%" valign="top"><strong>BUILD</strong><br>MUSA runtime and AI serving<br><sub>Graph-safe execution · measured performance</sub></td>
+<td width="33%" valign="top"><strong>RESEARCH</strong><br>Distributed systems and networks<br><sub>Federated learning · data-center infrastructure</sub></td>
+</tr>
+</table>
+
+## At a Glance
 
 - **Current**: AI Infrastructure Engineer at **Moore Threads** (摩尔线程)
-- **Research**: Distributed networks, data center networks, federated learning, AI infrastructure
-- **Education**: Ph.D. @ BJTU (2026) | B.E. @ China University of Petroleum (Beijing) (GPA **1/60**)
+- **Education**: Ph.D. @ BJTU (2026) · B.E. @ China University of Petroleum (Beijing), GPA **1/60**
 - **Focus**: MUSA backend enablement, LLM/audio-model serving, graph-safe execution, and measured performance
 
 ## Highlights
