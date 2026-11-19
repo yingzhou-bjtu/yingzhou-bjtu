@@ -4,33 +4,55 @@
 
 # Ying Zhou (周瀛)
 
-**AI Infrastructure Engineer** @ Moore Threads · Ph.D., BJTU
+**AI Infrastructure Engineer @ Moore Threads** · Ph.D., BJTU
 
-[![Homepage](https://img.shields.io/badge/Homepage-yingzhou--bjtu.github.io-blue?style=flat&logo=googlechrome)](https://yingzhou-bjtu.github.io/)
-[![IEEE Xplore](https://img.shields.io/badge/IEEE_Xplore-Author_Profile-00629B?style=flat&logo=ieee&logoColor=white)](https://ieeexplore.ieee.org/author/37087009843)
-[![Email](https://img.shields.io/badge/Email-22110019@bjtu.edu.cn-EA4335?style=flat&logo=gmail&logoColor=white)](mailto:22110019@bjtu.edu.cn)
-[![GitHub](https://img.shields.io/badge/GitHub-yingzhou--bjtu-181717?style=flat&logo=github)](https://github.com/yingzhou-bjtu)
+Networking systems → efficient AI serving · MUSA runtime, model enablement,
+graph-safe execution, and reproducible performance work.
+
+[![Homepage](https://img.shields.io/badge/Homepage-Academic_Profile-224b8d?style=flat-square&logo=googlechrome&logoColor=white)](https://yingzhou-bjtu.github.io/)
+[![Contributions](https://img.shields.io/badge/Open_Source-Contribution_Map-0e7490?style=flat-square&logo=git&logoColor=white)](https://yingzhou-bjtu.github.io/contributions/)
+[![IEEE Xplore](https://img.shields.io/badge/IEEE_Xplore-Author_Profile-00629B?style=flat-square&logo=ieee&logoColor=white)](https://ieeexplore.ieee.org/author/37087009843)
+[![Email](https://img.shields.io/badge/Email-22110019@bjtu.edu.cn-EA4335?style=flat-square&logo=gmail&logoColor=white)](mailto:22110019@bjtu.edu.cn)
 
 </div>
 
 ## About Me
 
-- **Current**: Joining **Moore Threads** (摩尔线程) as AI Infrastructure Engineer
+- **Current**: AI Infrastructure Engineer at **Moore Threads** (摩尔线程)
 - **Research**: Distributed networks, data center networks, federated learning, AI infrastructure
 - **Education**: Ph.D. @ BJTU (2026) | B.E. @ China University of Petroleum (Beijing) (GPA **1/60**)
-- **Contact**: 22110019@bjtu.edu.cn
+- **Focus**: MUSA backend enablement, LLM/audio-model serving, graph-safe execution, and measured performance
 
 ## Highlights
 
 | Area | Details |
 |------|---------|
 | Publications | TCE, ToN (CCF-A), ICASSP (CCF-B), INFOCOM/CCS under review |
-| Awards | CUMCM National First Prize (Top 0.3%), Huawei Cup National 2nd/3rd Prize |
+| Awards | CUMCM National First Prize, Huawei Cup National 2nd/3rd Prize |
 | Industry | AI Infra @ Qingcheng Zhiji, Algorithm @ China Mobile, Research @ SUAT |
+
+## Selected Upstream Contributions
+
+Authored pull requests across the production systems I work on. Open proposals and
+merged changes are labeled separately; the links point to the upstream evidence.
+
+| Project | Contribution | Status | PR |
+|---|---|---|:---:|
+| **SGLang** | Public MUSA JIT compilation through `mcc` | Open | [#51491](https://github.com/sgl-project/sglang/pull/51491) |
+| **SGLang** | Shared `store_cache` contract for MUSA KV cache | Open | [#50916](https://github.com/sgl-project/sglang/pull/50916) |
+| **SGLang-Omni** | MUSA audio and vocoder paths for MOSS-TTS | Open | [#3833](https://github.com/sgl-project/sglang-omni/pull/3833) |
+| **SGLang-Omni** | FAST attention reuse for FishAudio S2-Pro | Merged | [#3829](https://github.com/sgl-project/sglang-omni/pull/3829) |
+| **SGLang** | Portable breakable-capture status | Merged | [#47034](https://github.com/sgl-project/sglang/pull/47034) |
+| **torchada** | Joint in-place RoPE provider | Merged | [#138](https://github.com/MooreThreads/torchada/pull/138) |
+| **FlagTensor** | Initial MUSA backend support | Merged | [#14](https://github.com/flagos-ai/FlagTensor/pull/14) |
+
+<sub>Status snapshot: 2026-11-19. Full contribution map:
+[yingzhou-bjtu.github.io/contributions](https://yingzhou-bjtu.github.io/contributions/).</sub>
 
 ## Links
 
 - **[Academic Homepage](https://yingzhou-bjtu.github.io/)** — full CV, publications & projects
+- **[Open-Source Contributions](https://yingzhou-bjtu.github.io/contributions/)** — selected upstream PRs and systems work
 - **[LoongX](https://github.com/jhlxp/loongx)** — SimAI communication layer extension
 
 ## Selected Public Repositories
@@ -43,24 +65,21 @@
 | [Multipath Delay Measurements](https://github.com/yingzhou-bjtu/multipath-delay-measurements) | Relative-delay measurement dataset with DNS-derived IP metadata and packet captures |
 | [paper-agent](https://github.com/yingzhou-bjtu/paper-agent) | Local Overleaf writing workspace tools and reproducible paper workflows |
 
----
+<details>
+<summary><strong>Profile scope and repository standards</strong></summary>
 
-<div align="center">
-  <img src="https://komarev.com/ghpvc/?username=yingzhou-bjtu&color=blueviolet&style=flat-square" alt="Profile views" />
-</div>
-
-## Project Identity
+### Project Identity
 
 See [docs/PROJECT_IDENTITY.md](docs/PROJECT_IDENTITY.md) for the profile repository scope and public project boundary.
 See [docs/OPEN_SOURCE_STANDARD.md](docs/OPEN_SOURCE_STANDARD.md) for the repository hygiene and validation contract.
 
-## Repository Notes
+### Repository Notes
 
 This profile repository is intentionally small. Project code, datasets, and
 paper artifacts live in their own repositories; this README only keeps public
 identity, current work, and stable links.
 
-## Validation
+### Validation
 
 Before updating the profile README, run:
 
@@ -95,3 +114,5 @@ files: `.editorconfig`, `LICENSE`, `CONTRIBUTING.md`, `SECURITY.md`,
 `CODE_OF_CONDUCT.md`, and `CITATION.cff`. The selected repository table keeps
 both the expected GitHub repository slugs and the expected display names under
 validation so public links cannot drift silently.
+
+</details>
